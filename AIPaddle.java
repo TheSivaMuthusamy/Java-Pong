@@ -6,6 +6,7 @@
 package Pong;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 /**
@@ -16,7 +17,7 @@ public class AIPaddle implements Paddle {
     double y, yVel;
     boolean upAccel, downAccel;
     final double FRICTION = 0.94;
-    int player, x;
+    int player, x, score;
     Ball b1;
     
     public AIPaddle(int player, Ball b) {
@@ -31,7 +32,8 @@ public class AIPaddle implements Paddle {
     public void draw(Graphics g) {
         g.setColor(Color.white);
         g.fillRect(x, (int)y, 20, 80);
-     
+        g.setFont(new Font("Century Gothic", Font.PLAIN, 48));
+        g.drawString(Integer.toString(getScore()), 175, 50);
     }
 
     public void move() {
@@ -45,6 +47,14 @@ public class AIPaddle implements Paddle {
     
     public int getY() {
         return (int)y;
+    }
+    
+    public int getScore() {
+        return score;
+    }
+    
+    public void increaseScore() {
+        score++;
     }
     
 }

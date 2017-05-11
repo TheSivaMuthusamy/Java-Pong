@@ -70,4 +70,11 @@ public class Ball {
     public int getY(){
         return (int)y;
     }
+    
+    public void resetBall() {
+        this.x = 350;
+        this.y = 250;
+        xVel = getRandomSpeed() * getRandomDirection(); 
+        yVel = getRandomSpeed() * getRandomDirection();
+    }
 }

@@ -25,9 +25,13 @@ public class Pong extends Applet implements Runnable, KeyListener {
     Paddle1 p1;
     AIPaddle p2;
     Ball b1;
-    boolean gameStarted;
+    boolean gameStarted, running, point;
     Graphics gfx;
+    Graphics g;
     Image img;
+    int delay = 3000;
+    long timer, timerdiff;
+    
     /**
      * Initialization method that will be called after the applet is loaded into
      * the browser.
@@ -35,11 +39,15 @@ public class Pong extends Applet implements Runnable, KeyListener {
     public void init() {
         this.resize(WIDTH, HEIGHT);
         this.addKeyListener(this);
+        running = true;
         gameStarted = false;
+        timer = 0;
+        timerdiff = 0;
+        
         p1 = new Paddle1(2);
         b1 = new Ball();
         p2 = new AIPaddle(1, b1);
-        //img = createImage(WIDTH, HEIGHT);
+        img = createImage(WIDTH, HEIGHT);
         //gfx = img.getGraphics();
         thread = new Thread(this);
         thread.start();
@@ -52,12 +60,18 @@ public class Pong extends Applet implements Runnable, KeyListener {
         if(!gameStarted) {
             g.setColor(Color.WHITE);
             g.drawString("Pong", 340, 100);
-            g.drawString("Press Enter to Begin..", 310, 130);
+            g.drawString("Press Enter to Begin..", 300, 130);
         }
         else {
-            if(b1.getX() < -10 || b1.getX() > 710) {
-                g.setColor(Color.white);
-                g.drawString("Game Over", 350, 250);
+            if(p1.getScore() > 2 || p2.getScore() > 2) {
+                running = false;
+            }
+            else if(b1.getX() < -10) {
+                p1.increaseScore();
+            }
+            else if(b1.getX() > 710) {
+                p2.increaseScore(); 
+                b1.resetBall();
             }
             else {
                 p1.draw(g);
@@ -76,7 +90,9 @@ public class Pong extends Applet implements Runnable, KeyListener {
     }
 
     public void run() {
-        for(;;) {
+        
+        
+        while(running) {
             if(gameStarted) {
                 p1.move();
                 p2.move();
@@ -91,6 +107,7 @@ public class Pong extends Applet implements Runnable, KeyListener {
                 Logger.getLogger(Pong.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        //g.drawString("Game Over", 300, 130);
     }
     
     @Override
